@@ -27,7 +27,7 @@ func main() {
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, 
 		AllowedMethods: []string{"GET", "POST", "DELETE"}, 
-		AllowedHeaders: []string{"Content-Type"},
+		AllowedHeaders: []string{"Content-Type", "X-Api-Key"},
 	});
 	handler := c.Handler(mux)
 
