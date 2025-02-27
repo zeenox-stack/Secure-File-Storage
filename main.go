@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/rs/cors"
 	"github.com/joho/godotenv"
@@ -11,13 +12,15 @@ import (
 	"Secure-File-Storage/middleware"
 )
 
-func main() { 
-	if err := godotenv.Load(); err != nil {
-		fmt.Printf("Error: %s", err.Error()); 
-		return;
+func main() {
+	if env := os.Getenv("GO_ENV"); env == "" || env == "development" {
+		if err := godotenv.Load(); err != nil {
+			fmt.Printf("Error: %s", err.Error())
+			return
+		}
 	}
-	
-	mux := http.NewServeMux(); 
+
+	mux := http.NewServeMux()
 
 	mux.Handle("/upload", middleware.Auth(http.HandlerFunc(handlers.UploadFile)))
 	mux.Handle("/get", middleware.Auth(http.HandlerFunc(handlers.GetFiles)))
@@ -25,10 +28,10 @@ func main() {
 	mux.Handle("/delete", middleware.Auth(http.HandlerFunc(handlers.DeleteFile)))
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, 
-		AllowedMethods: []string{"GET", "POST", "DELETE"}, 
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "DELETE"},
 		AllowedHeaders: []string{"Content-Type", "X-Api-Key"},
-	});
+	})
 	handler := c.Handler(mux)
 
 	fmt.Println("Server is running at http://localhost:8000")
@@ -36,3 +39,4 @@ func main() {
 		fmt.Printf("Error: %s", err.Error())
 	}
 }
+
