@@ -3,22 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/rs/cors"
-	"github.com/joho/godotenv"
 
 	"Secure-File-Storage/handlers"
 	"Secure-File-Storage/middleware"
 )
 
 func main() {
-	if env := os.Getenv("GO_ENV"); env == "" || env == "development" {
-		if err := godotenv.Load(); err != nil {
-			fmt.Printf("Error: %s", err.Error())
-			return
-		}
-	}
 
 	mux := http.NewServeMux()
 
